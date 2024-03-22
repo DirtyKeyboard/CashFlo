@@ -2,7 +2,64 @@
 @tailwind components;
 @tailwind utilities;
 
+
 #gradient {
     background: rgb(21,23,26);
-    background: linear-gradient(100deg, rgba(21,23,26,1) 0%, rgba(22,4,25,1) 100%);
+    background: linear-gradient(180deg, rgb(12, 12, 12) 0%, rgb(53, 5, 61) 100%);
+}
+
+#nav {
+    background: rgb(21,23,26);
+    background: linear-gradient(85deg, rgba(21,23,26,0) 0%, rgba(25,10,28,0) 55%, rgba(0, 0, 0, 0.664) 100%);
+}
+
+.navButton {
+    text-decoration: none;
+    background-image: linear-gradient(#ffffff, #ffffff);
+    background-size: 0% 0.1em;
+    background-position-y: 100%;
+    background-position-x: 100%;
+    background-repeat: no-repeat;
+    transition: background-size 0.2s ease-in-out;
+    }
+    .navButton:hover,
+    .navButton:focus,
+    .navButton:active {
+    background-size: 100% 0.1em;
+    background-position-x: 0%;
+    }
+
+.f-extralight {
+    font-family: "Bai Jamjuree", sans-serif;
+    font-weight: 200;
+    font-style: normal;
+}
+
+.f-light {
+    font-family: "Bai Jamjuree", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+}
+.f-regular {
+    font-family: "Bai Jamjuree", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.f-medium {
+    font-family: "Bai Jamjuree", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+}
+
+.f-semibold {
+    font-family: "Bai Jamjuree", sans-serif;
+    font-weight: 600;
+    font-style: normal;
+}
+
+.f-bold {
+    font-family: "Bai Jamjuree", sans-serif;
+    font-weight: 700;
+    font-style: normal;
 }
