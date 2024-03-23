@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 require('dotenv').config()
+const bcrypt = require('bcrypt');
 const { Pool } = require('pg')
 const jwt = require('jsonwebtoken')
 const pool = new Pool ({
@@ -16,12 +17,11 @@ const authToken = (req, res, next) => {
     const authHeader = req.headers['token']
     const token = authHeader && authHeader.split(' ')[1] //Bearer { token }
     if (!token) return res.sendStatus(401)
-    jwt.verify(token, process.ACCESS_TOKEN_SECRET, (err, user) => {
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
         if (err) return res.sendStatus(403)
             req.user = user;
         next()
     })
-
 }
 
 app.get('/', async(req, res) => { 
@@ -30,4 +30,51 @@ app.get('/', async(req, res) => {
 
 app.listen(process.env.BACKEND_PORT || 5533, () => {
     console.log("Listening on port " + process.env.BACKEND_PORT || 5533);
+})
+
+app.get('/checkToken', (req,res) => {
+    const authHeader = req.headers['token']
+    const token = authHeader && authHeader.split(' ')[1] //Bearer { token }
+    if (!token) return res.sendStatus(401)
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+        if (err) return res.sendStatus(403)
+            req.user = user;
+        res.sendStatus(200)
+    })
+})
+
+app.post('/register', async (req, res) => {
+    try {
+        const saltRounds = process.env.SALT_ROUNDS;
+        const salt = await bcrypt.genSalt(parseInt(saltRounds));
+        const hashedPassword = await bcrypt.hash(req.body.password, salt)
+        const client = await pool.connect()
+        await client.query(`INSERT INTO users (email, username, password) VALUES ('${req.body.email}', '${req.body.username}', '${hashedPassword}');`)
+        const userQuery = await client.query(`SELECT * FROM users WHERE username = '${req.body.username}';`)
+        const user = userQuery.rows[0]
+        client.release();
+        const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '15m'})
+        res.status(200).send({accessToken: `Bearer ${token}`});
+    } catch (e) {
+        res.status(400).send({msg: e.detail})
+    }
+})
+
+app.get('/login', async (req, res) => {
+    try { 
+        const query = await pool.query(`SELECT * FROM users WHERE email='${req.headers.email}';`)
+        console.log(query.rows[0])
+        const isVerified = await bcrypt.compare(req.headers.password, query.rows[0].password)
+        if (isVerified) {
+            const token = jwt.sign(query.rows[0], process.env.ACCESS_TOKEN_SECRET, {expiresIn: '15m'})
+            res.status(200).send({accessToken: `Bearer ${token}`, username: query.rows[0].username});
+        }
+        else {
+            res.sendStatus(401)
+        }
+    }
+    catch (e)
+    {
+        res.status(400).send({msg: e.detail})
+    }
 })
