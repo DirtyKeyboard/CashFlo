@@ -5,15 +5,23 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import { validate } from "react-email-validator";
+import IsUserLoggedIn from "./IsUserLoggedIn";
 
 function Login() {
     const error = (msg) => {
         toast.error(msg, { position: "bottom-right" });
     };
-    const [form, setForm] = useState({ email: "", password: "", username: "" });
+    const [form, setForm] = useState({
+        email: "",
+        password: "",
+        username: "",
+        first_name: "",
+        last_name: "",
+    });
     const nav = useNavigate();
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
+        console.log(form);
     };
     const register = async () => {
         if (form.username.length < 8)
@@ -27,6 +35,7 @@ function Login() {
                 const r = await axios.post("/api/register", form);
                 sessionStorage.setItem("token", r.data.accessToken);
                 sessionStorage.setItem("username", form.username);
+                sessionStorage.setItem("first_name", form.first_name);
                 nav("/home");
             } catch (e) {
                 error(
@@ -37,6 +46,7 @@ function Login() {
     };
     return (
         <>
+            <IsUserLoggedIn />
             <ToastContainer />
             <div
                 className="flex items-center justify-center h-screen"
@@ -44,12 +54,29 @@ function Login() {
             >
                 <form className="w-[30rem] h-[45rem] rounded-3xl p-4 flex flex-col items-center shadow-inner bg-gray-100 gap-10">
                     <img src={logo} className="w-[12rem]" />
+
+                    <div className="flex w-full gap-6">
+                        <Input
+                            onChange={handleChange}
+                            label="First Name"
+                            color="purple"
+                            name="first_name"
+                        />
+                        <Input
+                            onChange={handleChange}
+                            label="Last Name"
+                            color="purple"
+                            name="last_name"
+                        />
+                    </div>
+
                     <Input
                         onChange={handleChange}
                         label="Email"
                         color="purple"
                         name="email"
                     />
+
                     <Input
                         onChange={handleChange}
                         label="Username"

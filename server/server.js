@@ -49,7 +49,7 @@ app.post('/register', async (req, res) => {
         const salt = await bcrypt.genSalt(parseInt(saltRounds));
         const hashedPassword = await bcrypt.hash(req.body.password, salt)
         const client = await pool.connect()
-        await client.query(`INSERT INTO users (email, username, password) VALUES ('${req.body.email}', '${req.body.username}', '${hashedPassword}');`)
+        await client.query(`INSERT INTO users (email, username, password, first_name, last_name) VALUES ('${req.body.email}', '${req.body.username}', '${hashedPassword}', '${req.body.first_name}', '${req.body.last_name}');`)
         const userQuery = await client.query(`SELECT * FROM users WHERE username = '${req.body.username}';`)
         const user = userQuery.rows[0]
         client.release();
@@ -63,11 +63,10 @@ app.post('/register', async (req, res) => {
 app.get('/login', async (req, res) => {
     try { 
         const query = await pool.query(`SELECT * FROM users WHERE email='${req.headers.email}';`)
-        console.log(query.rows[0])
         const isVerified = await bcrypt.compare(req.headers.password, query.rows[0].password)
         if (isVerified) {
             const token = jwt.sign(query.rows[0], process.env.ACCESS_TOKEN_SECRET, {expiresIn: '15m'})
-            res.status(200).send({accessToken: `Bearer ${token}`, username: query.rows[0].username});
+            res.status(200).send({accessToken: `Bearer ${token}`, username: query.rows[0].username, first_name: query.rows[0].first_name});
         }
         else {
             res.sendStatus(401)

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
+import IsUserLoggedIn from "./IsUserLoggedIn";
 
 function Login() {
     const error = (msg) => {
@@ -20,6 +21,7 @@ function Login() {
             console.log(r.data);
             sessionStorage.setItem("token", r.data.accessToken);
             sessionStorage.setItem("username", r.data.username);
+            sessionStorage.setItem("first_name", r.data.first_name);
             nav("/home");
         } catch (err) {
             error("Email or password invalid, please try again.");
@@ -28,6 +30,7 @@ function Login() {
     return (
         <>
             <ToastContainer />
+            <IsUserLoggedIn />
             <div
                 className="flex items-center justify-center h-screen"
                 id="gradient"

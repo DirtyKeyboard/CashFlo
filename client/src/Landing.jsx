@@ -3,11 +3,13 @@ import bg_landing_video from "./assets/bg_landing_video.mp4";
 import { Button as B } from "@material-tailwind/react";
 import logo from "./assets/logoWithText.png";
 import { useNavigate } from "react-router-dom";
+import IsUserLoggedIn from "./IsUserLoggedIn";
 
 const Landing = () => {
     const nav = useNavigate();
     return (
         <>
+            <IsUserLoggedIn />
             <div className="bg-[#14021d] fixed top-0 left-0">
                 <video
                     src={bg_landing_video}
@@ -41,7 +43,7 @@ const Landing = () => {
             </div>
             <div
                 className="fixed top-0 left-0 w-screen h-16 flex flex-row-reverse items-center px-4 gap-10"
-                id="nav"
+                id="landingNav"
             >
                 <a
                     className="text-white f-medium navButton"

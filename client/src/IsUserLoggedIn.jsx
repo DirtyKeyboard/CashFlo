@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-const CheckToken = () => {
+const IsUserLoggedIn = () => {
     const nav = useNavigate();
     React.useEffect(() => {
         const check = async () => {
@@ -9,16 +9,12 @@ const CheckToken = () => {
                 const r = await axios.get("/api/checkToken", {
                     headers: { token: sessionStorage.getItem("token") },
                 });
-            } catch (err) {
-                sessionStorage.removeItem("username");
-                sessionStorage.removeItem("token");
-                sessionStorage.removeItem("first_name");
-                nav("/");
-            }
+                nav("/home");
+            } catch (err) {}
         };
         check();
     }, []);
     return <></>;
 };
 
-export default CheckToken;
+export default IsUserLoggedIn;
