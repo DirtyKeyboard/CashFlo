@@ -4,97 +4,16 @@ import { Button } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
 import Nav from "./Nav";
 import moment from "moment";
-import Chart from "react-apexcharts";
+import CustomChart from "./CustomChart";
 
 const Home = () => {
-    const chartConfig = {
-        type: "line",
+    const config = {
         height: 240,
-        series: [
-            {
-                name: "Sales",
-                data: [50, 40, 300, 320, 500, 350, 200, 230, 500],
-            },
-        ],
-        options: {
-            chart: {
-                toolbar: {
-                    show: false,
-                },
-            },
-            title: {
-                show: "",
-            },
-            dataLabels: {
-                enabled: false,
-            },
-            colors: ["#020617"],
-            stroke: {
-                lineCap: "round",
-                curve: "smooth",
-            },
-            markers: {
-                size: 0,
-            },
-            xaxis: {
-                axisTicks: {
-                    show: false,
-                },
-                axisBorder: {
-                    show: false,
-                },
-                labels: {
-                    style: {
-                        colors: "#616161",
-                        fontSize: "12px",
-                        fontFamily: "inherit",
-                        fontWeight: 400,
-                    },
-                },
-                categories: [
-                    "Apr",
-                    "May",
-                    "Jun",
-                    "Jul",
-                    "Aug",
-                    "Sep",
-                    "Oct",
-                    "Nov",
-                    "Dec",
-                ],
-            },
-            yaxis: {
-                labels: {
-                    style: {
-                        colors: "#616161",
-                        fontSize: "12px",
-                        fontFamily: "inherit",
-                        fontWeight: 400,
-                    },
-                },
-            },
-            grid: {
-                show: true,
-                borderColor: "#dddddd",
-                strokeDashArray: 5,
-                xaxis: {
-                    lines: {
-                        show: true,
-                    },
-                },
-                padding: {
-                    top: 5,
-                    right: 20,
-                },
-            },
-            fill: {
-                opacity: 0.8,
-            },
-            tooltip: {
-                theme: "dark",
-            },
-        },
+        name: "Test",
+        data: [1, 2, 3, 4],
+        categories: [100, 200, 300, 400],
     };
+
     const nav = useNavigate();
     const [time, setTime] = React.useState("");
     React.useEffect(() => {
@@ -105,27 +24,24 @@ const Home = () => {
     }, []);
     return (
         <>
-            <Nav className="border border-red-500" />
-            <CheckToken />
-            <div className="px-4 flex flex-col">
-                <h1 className="f-medium text-[5rem] text-white">
-                    {" "}
-                    Good {time}, {sessionStorage.getItem("first_name")}
-                </h1>
-                <h1 className="f-light text-4xl text-white">
-                    {" "}
-                    Here are your insights for today.
-                </h1>
-                \
-                <div className="flex flex-row gap-4 mb-52">
-                    <div className="bg-white p-2 rounded-3xl">
-                        <Chart {...chartConfig} />
-                    </div>
-                    <div className="bg-white p-2 rounded-3xl">
-                        <Chart {...chartConfig} />
-                    </div>
-                    <div className="bg-white p-2 rounded-3xl">
-                        <Chart {...chartConfig} />
+            <div className="fixed top-0 left-0 w-screen h-screen bg-gradient-to-b from-[#000000] to-[#3f044985]" />
+            <div className="absolute top-0 left-0 w-screen h-screen">
+                <Nav />
+                <CheckToken />
+                <div className="px-4 flex flex-col">
+                    <h1 className="f-medium text-[5rem] text-white">
+                        {" "}
+                        Good {time}, {sessionStorage.getItem("first_name")}
+                    </h1>
+                    <h1 className="f-light text-4xl text-white">
+                        {" "}
+                        Here are your insights for today.
+                    </h1>
+                    \
+                    <div className="flex flex-row gap-4 mb-52">
+                        <div className="bg-gray-900 p-2 rounded-3xl">
+                            <CustomChart {...config} />
+                        </div>
                     </div>
                 </div>
                 <Button

@@ -9,6 +9,7 @@ const CheckToken = () => {
                 const r = await axios.get("/api/checkToken", {
                     headers: { token: sessionStorage.getItem("token") },
                 });
+                console.log(r.data);
             } catch (err) {
                 sessionStorage.removeItem("username");
                 sessionStorage.removeItem("token");

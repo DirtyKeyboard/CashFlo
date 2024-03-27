@@ -39,7 +39,10 @@ app.get('/checkToken', (req,res) => {
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
         if (err) return res.sendStatus(403)
             req.user = user;
-        res.sendStatus(200)
+        delete user.exp;
+        delete user.iat;
+        delete user.password;
+        res.status(200).send({msg: "OK", user: user})
     })
 })
 
